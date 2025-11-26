@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect, useState, useRef } from "react";
+import { X } from "lucide-react";
 
-const ResponsiveModal = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const ResponsiveModal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   maxWidth = "28rem",
-  closeOnBackdrop = true 
+  closeOnBackdrop = true,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -23,14 +23,14 @@ const ResponsiveModal = ({
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setOpen(true));
       });
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else if (mounted) {
       setOpen(false);
       setClosing(true);
       const timer = setTimeout(() => {
         setMounted(false);
         setClosing(false);
-        document.body.style.overflow = '';
+        document.body.style.overflow = "";
       }, 350);
       return () => clearTimeout(timer);
     }
@@ -39,11 +39,11 @@ const ResponsiveModal = ({
   // Handle Escape key
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
     if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-      return () => window.removeEventListener('keydown', handleEscape);
+      window.addEventListener("keydown", handleEscape);
+      return () => window.removeEventListener("keydown", handleEscape);
     }
   }, [isOpen, onClose]);
 
@@ -51,24 +51,21 @@ const ResponsiveModal = ({
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!closeOnBackdrop) return;
-      
+
       // Check if click is outside the modal content
-      if (
-        modalRef.current && 
-        !modalRef.current.contains(e.target)
-      ) {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
         onClose();
       }
     };
 
     if (isOpen) {
       // Use mousedown for better UX (closes immediately on click)
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('touchstart', handleClickOutside);
-      
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+
       return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        document.removeEventListener('touchstart', handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("touchstart", handleClickOutside);
       };
     }
   }, [isOpen, onClose, closeOnBackdrop]);
@@ -78,7 +75,7 @@ const ResponsiveModal = ({
   return (
     <div className="fixed inset-0 z-50">
       {/* Backdrop */}
-      <div 
+      <div
         ref={backdropRef}
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         style={{ opacity: open ? 1 : 0 }}
@@ -87,14 +84,13 @@ const ResponsiveModal = ({
 
       {/* Modal Positioning Container */}
       <div className="fixed inset-0 flex items-end md:items-center md:justify-center md:p-4 overflow-y-auto">
-        
         {/* Modal Content */}
-        <div 
+        <div
           ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-title"
-          style={{ '--modal-max-width': maxWidth }}
+          style={{ "--modal-max-width": maxWidth }}
           className={`
             relative bg-white shadow-2xl flex flex-col max-h-[90vh]
             w-full rounded-t-3xl
@@ -103,23 +99,18 @@ const ResponsiveModal = ({
             
             /* Animation */
             transition-all duration-300
-            ${closing ? 'duration-200' : 'duration-350'}
+            ${closing ? "duration-200" : "duration-350"}
             
             /* Mobile: Slide from bottom */
-            ${open ? 'translate-y-0' : 'translate-y-full'}
+            ${open ? "translate-y-0" : "translate-y-full"}
             
             /* Desktop: Scale + Fade */
-            ${open 
-              ? 'md:translate-y-0 md:scale-100 md:opacity-100' 
-              : 'md:translate-y-4 md:scale-[0.98] md:opacity-0'
+            ${
+              open
+                ? "md:translate-y-0 md:scale-100 md:opacity-100"
+                : "md:translate-y-4 md:scale-[0.98] md:opacity-0"
             }
           `}
-          style={{
-            '--modal-max-width': maxWidth,
-            transitionTimingFunction: open 
-              ? 'cubic-bezier(0.16, 1, 0.3, 1)' 
-              : 'cubic-bezier(0.4, 0, 1, 1)',
-          }}
         >
           {/* Mobile Drag Handle */}
           <div className="flex justify-center pt-3 pb-1 md:hidden">
@@ -128,10 +119,13 @@ const ResponsiveModal = ({
 
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
-            <h3 id="modal-title" className="text-lg font-semibold text-gray-900">
+            <h3
+              id="modal-title"
+              className="text-lg font-semibold text-gray-900"
+            >
               {title}
             </h3>
-            <button 
+            <button
               onClick={onClose}
               className=" md:hidden
                 group p-2 -mr-2 rounded-full text-gray-400 
@@ -142,9 +136,9 @@ const ResponsiveModal = ({
               "
               aria-label="Close modal"
             >
-              <X 
-                size={20} 
-                strokeWidth={2.5} 
+              <X
+                size={20}
+                strokeWidth={2.5}
                 className="transition-transform duration-150 group-hover:rotate-90"
               />
             </button>

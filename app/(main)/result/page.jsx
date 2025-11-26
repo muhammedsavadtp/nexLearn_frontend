@@ -1,5 +1,10 @@
-import React from 'react';
+"use client";
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch
+import { useRouter } from 'next/navigation';
 import { HelpCircle, CheckSquare, XSquare, Square } from 'lucide-react';
+import { resetExam } from '@/lib/redux/slices/examSlice'; // Import resetExam
+import { persistedStore } from '@/lib/redux/store/store'; // Import persistedStore
 
 // Reusable Row Component for the stats
 const StatRow = ({ icon: Icon, colorClass, label, value }) => {
@@ -20,6 +25,32 @@ const StatRow = ({ icon: Icon, colorClass, label, value }) => {
 };
 
 const ResultPage = () => {
+  const router = useRouter();
+  const dispatch = useDispatch(); // Get dispatch
+  const examResult = useSelector((state) => state.exam.examResult);
+
+  useEffect(() => {
+    if (!examResult) {
+      // If there's no exam result, redirect to the instructions page
+      router.push('/instructions');
+    }
+  }, [examResult, router]);
+
+  if (!examResult) {
+    return null; // Or a loading spinner
+  }
+
+  const { score, correct, wrong, not_attended } = examResult;
+  // Assuming total_questions is also available in examResult or can be calculated
+  // For now, I'll use correct + wrong + not_attended if total_questions is not directly available
+  const calculatedTotalQuestions = correct + wrong + not_attended;
+
+  const handleDone = () => {
+    dispatch(resetExam()); // Clear exam data from Redux state
+    persistedStore.purge(); // Clear all persisted data including auth and exam
+    router.push('/auth/login'); // Redirect to login page
+  };
+
   return (
     <div className="min-h-screen w-full bg-[#F0F9FF] flex items-center justify-center p-4 font-sans">
       
@@ -32,7 +63,7 @@ const ResultPage = () => {
             Marks Obtained:
           </h2>
           <div className="text-5xl font-semibold tracking-tight">
-            100 / 100
+            {score} / {calculatedTotalQuestions}
           </div>
         </div>
 
@@ -43,34 +74,37 @@ const ResultPage = () => {
             icon={HelpCircle} 
             colorClass="bg-[#EAB308]" // Yellow
             label="Total Questions" 
-            value="100" 
+            value={calculatedTotalQuestions} 
           />
 
           <StatRow 
             icon={CheckSquare} 
             colorClass="bg-[#4CAF50]" // Green
             label="Correct Answers" 
-            value="003" 
+            value={correct} 
           />
 
           <StatRow 
             icon={XSquare} 
             colorClass="bg-[#EF4444]" // Red
             label="Incorrect Answers" 
-            value="001" 
+            value={wrong} 
           />
 
           <StatRow 
             icon={Square} 
             colorClass="bg-[#6B7280]" // Gray
             label="Not Attended Questions" 
-            value="096" 
+            value={not_attended} 
           />
 
         </div>
 
         {/* 3. Action Button */}
-        <button className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md mt-2">
+        <button 
+          onClick={handleDone}
+          className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md mt-2"
+        >
           Done
         </button>
 

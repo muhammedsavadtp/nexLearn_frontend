@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { submitExam } from '@/lib/redux/slices/examThunks';
 import ResponsiveModal from '../ui/ResponsiveModal';
 import { Clock, HelpCircle, FileText, Bookmark } from 'lucide-react';
+import toast from 'react-hot-toast'; // Import toast
 
 const StatRow = ({ icon: Icon, colorClass, label, value }) => (
   <div className="flex items-center justify-between py-3">
@@ -14,7 +18,49 @@ const StatRow = ({ icon: Icon, colorClass, label, value }) => (
   </div>
 );
 
-const SubmitDialog = ({ isOpen, onClose }) => {
+const SubmitDialog = ({ 
+  isOpen, 
+  onClose,
+  answers = {},
+  questions = [],
+  markedForReview = [],
+  timeRemaining = 0 
+}) => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Calculate stats
+  const totalQuestions = questions.length;
+  const answeredQuestions = Object.keys(answers).length;
+  const markedForReviewCount = markedForReview.length;
+
+  // Format time
+  const formatTime = (seconds) => {
+    if (seconds < 0) seconds = 0;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await dispatch(submitExam(answers)).unwrap();
+      router.push('/result');
+    } catch (error) {
+      console.error("Failed to submit exam:", error);
+      if (typeof error === 'string' && error.startsWith("Missing answers for questions:")) {
+        toast.error(error); // Display specific error message
+      } else {
+        toast.error("Failed to submit exam. Please try again."); // Generic error message
+      }
+    } finally {
+      setIsSubmitting(false);
+      onClose();
+    }
+  };
+
   return (
     <ResponsiveModal 
       isOpen={isOpen} 
@@ -27,33 +73,34 @@ const SubmitDialog = ({ isOpen, onClose }) => {
           icon={Clock} 
           colorClass="bg-[#1e293b]" // Dark Blue
           label="Remaining Time" 
-          value="87:13" 
+          value={formatTime(timeRemaining)} 
         />
         <StatRow 
           icon={FileText} 
           colorClass="bg-[#eab308]" // Yellow
           label="Total Questions" 
-          value="100" 
+          value={totalQuestions} 
         />
         <StatRow 
           icon={HelpCircle} 
           colorClass="bg-[#22c55e]" // Green
           label="Questions Answered" 
-          value="003" 
+          value={answeredQuestions.toString().padStart(3, "0")} 
         />
         <StatRow 
           icon={Bookmark} 
           colorClass="bg-[#9333ea]" // Purple
           label="Marked for review" 
-          value="001" 
+          value={markedForReviewCount.toString().padStart(3, "0")} 
         />
       </div>
 
       <button 
-        className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3 rounded-lg font-semibold transition-colors shadow-lg"
-        onClick={() => alert("Test Submitted!")}
+        className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3 rounded-lg font-semibold transition-colors shadow-lg disabled:opacity-50"
+        onClick={handleSubmit}
+        disabled={isSubmitting}
       >
-        Submit Test
+        {isSubmitting ? "Submitting..." : "Submit Test"}
       </button>
     </ResponsiveModal>
   );

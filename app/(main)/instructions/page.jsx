@@ -1,9 +1,12 @@
+// components/Instructions.jsx
+
 "use client";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
-
-import { quizInstructions } from "@/constants/instructions";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExamData } from "@/lib/redux/slices/examThunks";
+import { parseInstructions } from "@/utils/parseInstructions";
 
 const StatBox = ({ label, value }) => (
   <div className="flex flex-col items-center justify-center px-4 md:px-12 py-2">
@@ -16,10 +19,23 @@ const StatBox = ({ label, value }) => (
 
 const Instructions = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { instructions, totalMarks, totalTime, questions } = useSelector(
+    (state) => state.exam
+  );
+
+  useEffect(() => {
+    dispatch(fetchExamData());
+  }, [dispatch]);
 
   const handleStartTest = () => {
     router.push("/exam");
   };
+
+  // Parse instructions using utility function
+  const instructionItems = useMemo(() => {
+    return parseInstructions(instructions);
+  }, [instructions]);
 
   return (
     <div className="min-h-screen bg-[#F0F6FA] flex flex-col font-sans">
@@ -32,9 +48,9 @@ const Instructions = () => {
         {/* Stats Card */}
         <div className="bg-[#1F2937] rounded-lg shadow-lg w-full max-w-3xl overflow-hidden mb-8">
           <div className="flex justify-between divide-x divide-gray-600 py-8">
-            <StatBox label="Total MCQ's:" value="100" />
-            <StatBox label="Total marks:" value="100" />
-            <StatBox label="Total time:" value="90:00" />
+            <StatBox label="Total MCQ's:" value={questions?.length || 0} />
+            <StatBox label="Total marks:" value={totalMarks || 0} />
+            <StatBox label="Total time:" value={`${totalTime || 0}:00`} />
           </div>
         </div>
 
@@ -44,13 +60,17 @@ const Instructions = () => {
             Instructions:
           </h3>
 
-          <ol className="list-decimal list-outside ml-4 space-y-2 text-gray-600 text-xs md:text-sm leading-relaxed">
-            {quizInstructions.map((instruction, index) => (
-              <li key={index} className="pl-2">
-                {instruction}
-              </li>
-            ))}
-          </ol>
+          {instructionItems.length > 0 ? (
+            <ol className="list-decimal pl-6 space-y-3 text-gray-600 text-xs md:text-sm leading-relaxed">
+              {instructionItems.map((item, index) => (
+                <li key={index} className="pl-2">
+                  {item}
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="text-gray-500 text-sm">Loading instructions...</p>
+          )}
         </div>
 
         {/* Start Button */}
