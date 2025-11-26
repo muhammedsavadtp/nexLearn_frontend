@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import { sendOtp } from '@/lib/redux/slices/authThunks';
+import { setMobile as setMobileAction } from '@/lib/redux/slices/authSlice';
 
 const PhoneStep = ({ onNext }) => {
+  const [mobile, setMobile] = useState('');
+  const dispatch = useDispatch();
+
+  const handleSendOtp = () => {
+    if (mobile.length === 10) {
+      const formData = new FormData();
+      formData.append('mobile', `+91${mobile}`);
+      dispatch(setMobileAction(`+91${mobile}`));
+      dispatch(sendOtp(formData));
+      onNext();
+    } else {
+      alert('Please enter a valid 10-digit mobile number.');
+    }
+  };
+
   return (
     <div className="flex flex-col h-full justify-center space-y-6">
       <div className="space-y-2">
@@ -17,13 +35,15 @@ const PhoneStep = ({ onNext }) => {
         prefix="🇮🇳 +91" 
         placeholder="1234 567891"
         type="tel"
+        value={mobile}
+        onChange={(e) => setMobile(e.target.value)}
       />
 
       <div>
         <p className="text-[10px] text-gray-400 mb-6">
           By tapping Get started, you agree to the <span className="underline cursor-pointer">Terms & Conditions</span>
         </p>
-        <Button onClick={onNext}>Get Started</Button>
+        <Button onClick={handleSendOtp}>Get Started</Button>
       </div>
     </div>
   );

@@ -1,15 +1,39 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import { Plus, X } from "lucide-react";
+import { createProfile } from "@/lib/redux/slices/authThunks";
+import { useRouter } from "next/navigation";
 
 const DetailsStep = () => {
   const [image, setImage] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [qualification, setQualification] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { mobile } = useSelector((state) => state.auth);
 
   const handleImageUpload = (e) => {
-    // Simulating upload for UI demo
     if (e.target.files && e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
+      setImage(e.target.files[0]);
+    }
+  };
+
+  const handleCreateProfile = async () => {
+    const formData = new FormData();
+    formData.append("mobile", mobile);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("qualification", qualification);
+    formData.append("profile_image", image);
+
+    try {
+      await dispatch(createProfile(formData)).unwrap();
+      router.push("/");
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -31,7 +55,7 @@ const DetailsStep = () => {
           {image ? (
             <div className="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
               <img
-                src={image}
+                src={URL.createObjectURL(image)}
                 alt="Profile"
                 className="w-full h-full object-cover"
               />
@@ -77,16 +101,28 @@ const DetailsStep = () => {
 
       {/* Form Fields */}
       <div className="space-y-4">
-        <Input label="Name*" placeholder="Enter your Full Name" />
+        <Input
+          label="Name*"
+          placeholder="Enter your Full Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <Input
           label="Email"
           placeholder="Enter your Email Address"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <Input label="Your qualification*" placeholder="Select qualification" />
+        <Input
+          label="Your qualification*"
+          placeholder="Select qualification"
+          value={qualification}
+          onChange={(e) => setQualification(e.target.value)}
+        />
       </div>
 
-      <Button>Get Started</Button>
+      <Button onClick={handleCreateProfile}>Get Started</Button>
     </div>
   );
 };

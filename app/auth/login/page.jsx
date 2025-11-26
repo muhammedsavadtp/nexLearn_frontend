@@ -4,8 +4,10 @@ import LeftPanel from "@/components/auth/LeftPanel";
 import PhoneStep from "@/components/auth/steps/PhoneStep";
 import OtpStep from "@/components/auth/steps/OtpStep";
 import DetailsStep from "@/components/auth/steps/DetailsStep";
+import usePublicAuth from "@/lib/hooks/usePublicAuth";
 
 const page = () => {
+  usePublicAuth();
   const [step, setStep] = useState(1);
 
   // Simple step navigation handler
