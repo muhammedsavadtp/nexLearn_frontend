@@ -1,23 +1,21 @@
-import React from 'react';
+import React from "react";
 
 const LeftPanel = () => {
   return (
     <div className="hidden md:flex w-full md:w-1/2 flex-col justify-between bg-[#1e293b] p-8 text-white relative overflow-hidden">
-      
-      {/* Logo Area - Centered */}
       <div className="z-10 w-full flex justify-center pt-5">
-        <img 
-          src="/images/brand.png" 
-          alt="Brand Logo" 
-          className="h-20 w-auto object-contain" 
+        <img
+          src="/images/brand.png"
+          alt="Brand Logo"
+          className="h-20 w-auto object-contain"
         />
       </div>
 
       {/* Illustration Placeholder */}
       <div className="relative z-10 mt-auto flex justify-center">
-        <img 
-          src="/group.svg" 
-          alt="Learning Illustration" 
+        <img
+          src="/group.svg"
+          alt="Learning Illustration"
           className="w-full max-w-[350px] object-contain drop-shadow-2xl"
         />
       </div>

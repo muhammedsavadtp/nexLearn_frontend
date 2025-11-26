@@ -1,24 +1,24 @@
 "use client";
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; // Import useDispatch
-import { useRouter } from 'next/navigation';
-import { HelpCircle, CheckSquare, XSquare, Square } from 'lucide-react';
-import { resetExam } from '@/lib/redux/slices/examSlice'; // Import resetExam
-import { persistedStore } from '@/lib/redux/store/store'; // Import persistedStore
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { HelpCircle, CheckSquare, XSquare, Square } from "lucide-react";
+import { resetExam } from "@/lib/redux/slices/examSlice";
+import { persistedStore } from "@/lib/redux/store/store";
 
-// Reusable Row Component for the stats
 const StatRow = ({ icon: Icon, colorClass, label, value }) => {
   return (
     <div className="flex items-center justify-between py-3 px-2">
       <div className="flex items-center gap-4">
-        {/* Icon Box */}
-        <div className={`w-8 h-8 rounded flex items-center justify-center text-white shadow-sm ${colorClass}`}>
+        <div
+          className={`w-8 h-8 rounded flex items-center justify-center text-white shadow-sm ${colorClass}`}
+        >
           <Icon size={18} strokeWidth={3} />
         </div>
-        {/* Label */}
+
         <span className="text-slate-600 font-medium text-base">{label}:</span>
       </div>
-      {/* Value */}
+
       <span className="text-slate-900 font-bold text-base">{value}</span>
     </div>
   );
@@ -26,13 +26,13 @@ const StatRow = ({ icon: Icon, colorClass, label, value }) => {
 
 const ResultPage = () => {
   const router = useRouter();
-  const dispatch = useDispatch(); // Get dispatch
+  const dispatch = useDispatch();
   const examResult = useSelector((state) => state.exam.examResult);
 
   useEffect(() => {
     if (!examResult) {
       // If there's no exam result, redirect to the instructions page
-      router.push('/instructions');
+      router.push("/instructions");
     }
   }, [examResult, router]);
 
@@ -41,22 +41,18 @@ const ResultPage = () => {
   }
 
   const { score, correct, wrong, not_attended } = examResult;
-  // Assuming total_questions is also available in examResult or can be calculated
-  // For now, I'll use correct + wrong + not_attended if total_questions is not directly available
   const calculatedTotalQuestions = correct + wrong + not_attended;
 
   const handleDone = () => {
-    dispatch(resetExam()); // Clear exam data from Redux state
-    persistedStore.purge(); // Clear all persisted data including auth and exam
-    router.push('/auth/login'); // Redirect to login page
+    dispatch(resetExam()); 
+    persistedStore.purge(); 
+    router.push("/auth/login"); 
   };
 
   return (
     <div className="min-h-screen w-full bg-[#F0F9FF] flex items-center justify-center p-4 font-sans">
-      
       {/* Main Card Container */}
       <div className="w-full max-w-[400px] flex flex-col gap-6">
-        
         {/* 1. Score Header Card */}
         <div className="bg-gradient-to-b from-[#117C99] to-[#173042] rounded-xl p-8 text-center text-white shadow-lg shadow-cyan-900/20">
           <h2 className="text-sm font-medium opacity-90 mb-2 tracking-wide">
@@ -69,45 +65,42 @@ const ResultPage = () => {
 
         {/* 2. Stats List */}
         <div className="flex flex-col gap-1 px-2">
-          
-          <StatRow 
-            icon={HelpCircle} 
+          <StatRow
+            icon={HelpCircle}
             colorClass="bg-[#EAB308]" // Yellow
-            label="Total Questions" 
-            value={calculatedTotalQuestions} 
+            label="Total Questions"
+            value={calculatedTotalQuestions}
           />
 
-          <StatRow 
-            icon={CheckSquare} 
+          <StatRow
+            icon={CheckSquare}
             colorClass="bg-[#4CAF50]" // Green
-            label="Correct Answers" 
-            value={correct} 
+            label="Correct Answers"
+            value={correct}
           />
 
-          <StatRow 
-            icon={XSquare} 
+          <StatRow
+            icon={XSquare}
             colorClass="bg-[#EF4444]" // Red
-            label="Incorrect Answers" 
-            value={wrong} 
+            label="Incorrect Answers"
+            value={wrong}
           />
 
-          <StatRow 
-            icon={Square} 
+          <StatRow
+            icon={Square}
             colorClass="bg-[#6B7280]" // Gray
-            label="Not Attended Questions" 
-            value={not_attended} 
+            label="Not Attended Questions"
+            value={not_attended}
           />
-
         </div>
 
         {/* 3. Action Button */}
-        <button 
+        <button
           onClick={handleDone}
           className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md mt-2"
         >
           Done
         </button>
-
       </div>
     </div>
   );

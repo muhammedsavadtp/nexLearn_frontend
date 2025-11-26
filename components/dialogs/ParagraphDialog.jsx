@@ -7,7 +7,7 @@ const ParagraphDialog = ({ isOpen, onClose, paragraph }) => {
       isOpen={isOpen} 
       onClose={onClose} 
       title="Comprehensive Paragraph"
-      maxWidth="56rem" // Wider for text content
+      maxWidth="56rem" 
     >
       <div className="space-y-4 text-sm md:text-base leading-relaxed text-gray-700 text-justify">
         <p>{paragraph}</p>

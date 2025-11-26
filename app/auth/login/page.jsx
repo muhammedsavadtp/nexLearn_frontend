@@ -10,7 +10,7 @@ const page = () => {
   usePublicAuth();
   const [step, setStep] = useState(1);
 
-  // Simple step navigation handler
+
   const nextStep = () => setStep((prev) => prev + 1);
 
   const renderStep = () => {
@@ -27,7 +27,7 @@ const page = () => {
   };
   return (
     <div className="min-h-screen  w-full bg-auth-bg bg-cover bg-center bg-no-repeat flex items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Abstract Background Decoration (Simulating the waves) */}
+    
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-30">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[80%] rounded-full bg-blue-900/20 blur-[100px]" />
         <div className="absolute top-[20%] right-[0%] w-[40%] h-[70%] rounded-full bg-blue-800/20 blur-[100px]" />

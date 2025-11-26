@@ -1,5 +1,3 @@
-// components/Instructions.jsx
-
 "use client";
 import React, { useEffect, useMemo } from "react";
 import Button from "@/components/ui/Button";

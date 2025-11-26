@@ -59,7 +59,6 @@ const ResponsiveModal = ({
     };
 
     if (isOpen) {
-      // Use mousedown for better UX (closes immediately on click)
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("touchstart", handleClickOutside);
 

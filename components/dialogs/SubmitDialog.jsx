@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { submitExam } from '@/lib/redux/slices/examThunks';
 import ResponsiveModal from '../ui/ResponsiveModal';
 import { Clock, HelpCircle, FileText, Bookmark } from 'lucide-react';
-import toast from 'react-hot-toast'; // Import toast
+import toast from 'react-hot-toast'; 
 
 const StatRow = ({ icon: Icon, colorClass, label, value }) => (
   <div className="flex items-center justify-between py-3">
@@ -51,9 +51,9 @@ const SubmitDialog = ({
     } catch (error) {
       console.error("Failed to submit exam:", error);
       if (typeof error === 'string' && error.startsWith("Missing answers for questions:")) {
-        toast.error(error); // Display specific error message
+        toast.error(error); 
       } else {
-        toast.error("Failed to submit exam. Please try again."); // Generic error message
+        toast.error("Failed to submit exam. Please try again."); 
       }
     } finally {
       setIsSubmitting(false);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
-import { verifyOtp, sendOtp } from '@/lib/redux/slices/authThunks'; // Import sendOtp thunk
+import { verifyOtp, sendOtp } from '@/lib/redux/slices/authThunks'; 
 import toast from 'react-hot-toast';
 
 const OtpStep = ({ onNext }) => {
@@ -14,14 +14,11 @@ const OtpStep = ({ onNext }) => {
     try {
       const result = await dispatch(verifyOtp({ mobile, otp })).unwrap();
       if (result.login) {
-        // If the user already exists, we can redirect to the main page
-        // For now, let's just go to the next step
         onNext();
       } else {
         onNext();
       }
     } catch (error) {
-      // console.error(error);
       toast.error(error.message || "OTP verification failed");
     }
   };
@@ -46,7 +43,7 @@ const OtpStep = ({ onNext }) => {
         label="SMS code" 
         placeholder="123 456" 
         type="text"
-        className="tracking-widest" // Makes the numbers spaced out like the design
+        className="tracking-widest" 
         value={otp}
         onChange={(e) => setOtp(e.target.value.slice(0, 6))}
         maxLength={6}

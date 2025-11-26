@@ -19,10 +19,9 @@ const ExamInterface = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   const dispatch = useDispatch();
-  
-  // Get state with default values to prevent undefined errors
+
   const examState = useSelector((state) => state.exam);
-  
+
   const timeRemaining = examState?.timeRemaining ?? 0;
   const questions = examState?.questions ?? [];
   const answers = examState?.answers ?? {};
@@ -30,12 +29,10 @@ const ExamInterface = () => {
   const isLoading = examState?.isLoading ?? false;
   const error = examState?.error ?? null;
 
-  // Initialize state on mount (fixes redux-persist hydration issues)
   useEffect(() => {
     dispatch(initializeState());
   }, [dispatch]);
 
-  // Fetch exam data only if questions are not already in the store
   useEffect(() => {
     if (questions.length === 0) {
       dispatch(fetchExamData());
@@ -85,7 +82,7 @@ const ExamInterface = () => {
     (optionId) => {
       const currentQuestion = questions[currentQuestionIndex];
       if (!currentQuestion) return;
-      
+
       dispatch(
         setAnswer({
           questionId: currentQuestion.question_id,
@@ -99,7 +96,7 @@ const ExamInterface = () => {
   const handleMarkForReview = useCallback(() => {
     const currentQuestion = questions[currentQuestionIndex];
     if (!currentQuestion) return;
-    
+
     dispatch(toggleMarkForReview(currentQuestion.question_id));
   }, [dispatch, questions, currentQuestionIndex]);
 
@@ -111,7 +108,7 @@ const ExamInterface = () => {
     (questionId) => {
       const safeAnswers = answers || {};
       const safeMarkedForReview = markedForReview || [];
-      
+
       const isAnswered = safeAnswers[questionId] !== undefined;
       const isMarked = safeMarkedForReview.includes(questionId);
 
@@ -129,7 +126,7 @@ const ExamInterface = () => {
   );
 
   const currentQuestion = questions[currentQuestionIndex];
-  
+
   const isCurrentMarked = currentQuestion
     ? (markedForReview || []).includes(currentQuestion.question_id)
     : false;
