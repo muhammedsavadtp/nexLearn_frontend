@@ -1,0 +1,82 @@
+import React from 'react';
+import { HelpCircle, CheckSquare, XSquare, Square } from 'lucide-react';
+
+// Reusable Row Component for the stats
+const StatRow = ({ icon: Icon, colorClass, label, value }) => {
+  return (
+    <div className="flex items-center justify-between py-3 px-2">
+      <div className="flex items-center gap-4">
+        {/* Icon Box */}
+        <div className={`w-8 h-8 rounded flex items-center justify-center text-white shadow-sm ${colorClass}`}>
+          <Icon size={18} strokeWidth={3} />
+        </div>
+        {/* Label */}
+        <span className="text-slate-600 font-medium text-base">{label}:</span>
+      </div>
+      {/* Value */}
+      <span className="text-slate-900 font-bold text-base">{value}</span>
+    </div>
+  );
+};
+
+const ResultPage = () => {
+  return (
+    <div className="min-h-screen w-full bg-[#F0F9FF] flex items-center justify-center p-4 font-sans">
+      
+      {/* Main Card Container */}
+      <div className="w-full max-w-[400px] flex flex-col gap-6">
+        
+        {/* 1. Score Header Card */}
+        <div className="bg-gradient-to-b from-[#117C99] to-[#173042] rounded-xl p-8 text-center text-white shadow-lg shadow-cyan-900/20">
+          <h2 className="text-sm font-medium opacity-90 mb-2 tracking-wide">
+            Marks Obtained:
+          </h2>
+          <div className="text-5xl font-semibold tracking-tight">
+            100 / 100
+          </div>
+        </div>
+
+        {/* 2. Stats List */}
+        <div className="flex flex-col gap-1 px-2">
+          
+          <StatRow 
+            icon={HelpCircle} 
+            colorClass="bg-[#EAB308]" // Yellow
+            label="Total Questions" 
+            value="100" 
+          />
+
+          <StatRow 
+            icon={CheckSquare} 
+            colorClass="bg-[#4CAF50]" // Green
+            label="Correct Answers" 
+            value="003" 
+          />
+
+          <StatRow 
+            icon={XSquare} 
+            colorClass="bg-[#EF4444]" // Red
+            label="Incorrect Answers" 
+            value="001" 
+          />
+
+          <StatRow 
+            icon={Square} 
+            colorClass="bg-[#6B7280]" // Gray
+            label="Not Attended Questions" 
+            value="096" 
+          />
+
+        </div>
+
+        {/* 3. Action Button */}
+        <button className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md mt-2">
+          Done
+        </button>
+
+      </div>
+    </div>
+  );
+};
+
+export default ResultPage;

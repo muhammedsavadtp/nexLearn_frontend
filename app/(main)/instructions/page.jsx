@@ -1,0 +1,59 @@
+import React from "react";
+import Button from "@/components/ui/Button";
+
+import { quizInstructions } from "@/constants/instructions";
+
+const StatBox = ({ label, value }) => (
+  <div className="flex flex-col items-center justify-center px-4 md:px-12 py-2">
+    <span className="text-gray-400 text-xs md:text-sm font-medium mb-1">
+      {label}
+    </span>
+    <span className="text-2xl md:text-4xl font-light text-white">{value}</span>
+  </div>
+);
+
+const Instructions = () => {
+  return (
+    <div className="min-h-screen bg-[#F0F6FA] flex flex-col font-sans">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
+        {/* Page Title */}
+        <h1 className="text-xl md:text-2xl font-semibold text-slate-800 mb-8 text-center">
+          Ancient Indian History MCQ
+        </h1>
+
+        {/* Stats Card */}
+        <div className="bg-[#1F2937] rounded-lg shadow-lg w-full max-w-3xl overflow-hidden mb-8">
+          <div className="flex justify-between divide-x divide-gray-600 py-8">
+            <StatBox label="Total MCQ's:" value="100" />
+            <StatBox label="Total marks:" value="100" />
+            <StatBox label="Total time:" value="90:00" />
+          </div>
+        </div>
+
+        {/* Instructions Section */}
+        <div className="w-full max-w-3xl">
+          <h3 className="text-gray-700 font-bold mb-4 text-sm md:text-base">
+            Instructions:
+          </h3>
+
+          <ol className="list-decimal list-outside ml-4 space-y-2 text-gray-600 text-xs md:text-sm leading-relaxed">
+            {quizInstructions.map((instruction, index) => (
+              <li key={index} className="pl-2">
+                {instruction}
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Start Button */}
+        <div className="mt-10">
+          <Button className="primary-btn">
+            Start Test
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Instructions;
