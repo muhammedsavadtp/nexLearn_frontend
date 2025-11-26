@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
 import Button from "@/components/ui/Button";
+import { useRouter } from "next/navigation";
 
 import { quizInstructions } from "@/constants/instructions";
 
@@ -13,6 +15,12 @@ const StatBox = ({ label, value }) => (
 );
 
 const Instructions = () => {
+  const router = useRouter();
+
+  const handleStartTest = () => {
+    router.push("/exam");
+  };
+
   return (
     <div className="min-h-screen bg-[#F0F6FA] flex flex-col font-sans">
       <main className="flex-1 w-full max-w-5xl mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
@@ -47,7 +55,7 @@ const Instructions = () => {
 
         {/* Start Button */}
         <div className="mt-10">
-          <Button className="primary-btn">
+          <Button onClick={handleStartTest} className="primary-btn">
             Start Test
           </Button>
         </div>

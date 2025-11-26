@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
-import { verifyOtp } from '@/lib/redux/slices/authThunks';
+import { verifyOtp, sendOtp } from '@/lib/redux/slices/authThunks'; // Import sendOtp thunk
+import toast from 'react-hot-toast';
 
 const OtpStep = ({ onNext }) => {
   const [otp, setOtp] = useState('');
   const dispatch = useDispatch();
-  const { mobile } = useSelector((state) => state.auth);
+  const { mobile, loading } = useSelector((state) => state.auth);
 
   const handleVerifyOtp = async () => {
     try {
@@ -20,8 +21,16 @@ const OtpStep = ({ onNext }) => {
         onNext();
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      toast.error(error.message || "OTP verification failed");
     }
+  };
+
+  const handleResendOtp = () => {
+    const formData = new FormData();
+    formData.append('mobile', mobile);
+    dispatch(sendOtp(formData));
+    toast.success('OTP Resent!');
   };
 
   return (
@@ -29,7 +38,7 @@ const OtpStep = ({ onNext }) => {
       <div className="space-y-2">
         <h2 className="text-xl font-bold text-gray-900">Enter the code we texted you</h2>
         <p className="text-sm text-gray-500">
-          We've sent an SMS to +91 {mobile}
+          We've sent an SMS to  {mobile}
         </p>
       </div>
 
@@ -39,7 +48,8 @@ const OtpStep = ({ onNext }) => {
         type="text"
         className="tracking-widest" // Makes the numbers spaced out like the design
         value={otp}
-        onChange={(e) => setOtp(e.target.value)}
+        onChange={(e) => setOtp(e.target.value.slice(0, 6))}
+        maxLength={6}
       />
 
       <div className="space-y-6">
@@ -47,11 +57,14 @@ const OtpStep = ({ onNext }) => {
           Your 6 digit code is on its way. This can sometimes take a few moments to arrive.
         </p>
         
-        <button className="text-sm font-semibold text-gray-700 underline hover:text-gray-900">
+        <button
+          onClick={handleResendOtp}
+          className="text-sm font-semibold text-gray-700 underline hover:text-gray-900"
+        >
           Resend code
         </button>
 
-        <Button onClick={handleVerifyOtp}>Get Started</Button>
+        <Button onClick={handleVerifyOtp} disabled={otp.length !== 6 || loading} loading={loading}>Get Started</Button>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import { Plus, X } from "lucide-react";
 import { createProfile } from "@/lib/redux/slices/authThunks";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const DetailsStep = () => {
   const [image, setImage] = useState(null);
@@ -13,7 +14,7 @@ const DetailsStep = () => {
   const [qualification, setQualification] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
-  const { mobile } = useSelector((state) => state.auth);
+  const { mobile, loading } = useSelector((state) => state.auth);
 
   const handleImageUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -31,9 +32,11 @@ const DetailsStep = () => {
 
     try {
       await dispatch(createProfile(formData)).unwrap();
+      toast.success("Profile created successfully!");
       router.push("/");
     } catch (error) {
       console.error(error);
+      toast.error(error.message || "Profile creation failed");
     }
   };
 
@@ -122,7 +125,7 @@ const DetailsStep = () => {
         />
       </div>
 
-      <Button onClick={handleCreateProfile}>Get Started</Button>
+      <Button onClick={handleCreateProfile} loading={loading}>Get Started</Button>
     </div>
   );
 };

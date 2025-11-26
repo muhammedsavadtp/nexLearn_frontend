@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "@/lib/redux/slices/authSlice";
+import { logout } from "@/lib/redux/slices/authThunks";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {

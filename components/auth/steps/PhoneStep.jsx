@@ -4,6 +4,7 @@ import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { sendOtp } from '@/lib/redux/slices/authThunks';
 import { setMobile as setMobileAction } from '@/lib/redux/slices/authSlice';
+import toast from 'react-hot-toast';
 
 const PhoneStep = ({ onNext }) => {
   const [mobile, setMobile] = useState('');
@@ -17,7 +18,7 @@ const PhoneStep = ({ onNext }) => {
       dispatch(sendOtp(formData));
       onNext();
     } else {
-      alert('Please enter a valid 10-digit mobile number.');
+      toast.error('Please enter a valid 10-digit mobile number.');
     }
   };
 
@@ -36,7 +37,8 @@ const PhoneStep = ({ onNext }) => {
         placeholder="1234 567891"
         type="tel"
         value={mobile}
-        onChange={(e) => setMobile(e.target.value)}
+        onChange={(e) => setMobile(e.target.value.slice(0, 10))}
+        maxLength={10}
       />
 
       <div>
