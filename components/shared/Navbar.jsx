@@ -8,8 +8,8 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logout());
     router.push("/auth/login");
   };
 
