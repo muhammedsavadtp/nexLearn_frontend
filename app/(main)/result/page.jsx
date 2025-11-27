@@ -31,13 +31,16 @@ const ResultPage = () => {
 
   useEffect(() => {
     if (!examResult) {
-      // If there's no exam result, redirect to the instructions page
       router.push("/instructions");
     }
   }, [examResult, router]);
 
   if (!examResult) {
-    return null; // Or a loading spinner
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center">
+        <p>Loading results or redirecting...</p>
+      </div>
+    );
   }
 
   const { score, correct, wrong, not_attended } = examResult;
@@ -51,9 +54,7 @@ const ResultPage = () => {
 
   return (
     <div className="min-h-screen w-full bg-[#F0F9FF] flex items-center justify-center p-4 font-sans">
-      {/* Main Card Container */}
       <div className="w-full max-w-[400px] flex flex-col gap-6">
-        {/* 1. Score Header Card */}
         <div className="bg-gradient-to-b from-[#117C99] to-[#173042] rounded-xl p-8 text-center text-white shadow-lg shadow-cyan-900/20">
           <h2 className="text-sm font-medium opacity-90 mb-2 tracking-wide">
             Marks Obtained:
@@ -63,38 +64,36 @@ const ResultPage = () => {
           </div>
         </div>
 
-        {/* 2. Stats List */}
         <div className="flex flex-col gap-1 px-2">
           <StatRow
             icon={HelpCircle}
-            colorClass="bg-[#EAB308]" // Yellow
+            colorClass="bg-[#EAB308]"
             label="Total Questions"
             value={calculatedTotalQuestions}
           />
 
           <StatRow
             icon={CheckSquare}
-            colorClass="bg-[#4CAF50]" // Green
+            colorClass="bg-[#4CAF50]"
             label="Correct Answers"
             value={correct}
           />
 
           <StatRow
             icon={XSquare}
-            colorClass="bg-[#EF4444]" // Red
+            colorClass="bg-[#EF4444]"
             label="Incorrect Answers"
             value={wrong}
           />
 
           <StatRow
             icon={Square}
-            colorClass="bg-[#6B7280]" // Gray
+            colorClass="bg-[#6B7280]"
             label="Not Attended Questions"
             value={not_attended}
           />
         </div>
 
-        {/* 3. Action Button */}
         <button
           onClick={handleDone}
           className="w-full bg-[#1F2937] hover:bg-[#111827] text-white py-3.5 rounded-lg font-semibold text-sm transition-all shadow-md mt-2"
