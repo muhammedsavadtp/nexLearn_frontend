@@ -46,7 +46,7 @@ const SubmitDialog = ({
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await dispatch(submitExam(answers)).unwrap();
+      await dispatch(submitExam()).unwrap();
       router.push('/result');
     } catch (error) {
       console.error("Failed to submit exam:", error);
