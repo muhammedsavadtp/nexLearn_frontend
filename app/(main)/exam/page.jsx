@@ -337,7 +337,10 @@ const ExamInterface = () => {
                 <span>Marked For Review</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-[#800080] border-b-2 border-[#4CAF50]"></div>
+                <div className="w-5 h-5 bg-[#800080] rounded-md flex items-center justify-center">
+                  {/* Inner Green Square */}
+                  <div className="w-3 h-3 bg-[#4CAF50] rounded-[1px]"></div>
+                </div>
                 <span>Answered and Marked For Review</span>
               </div>
             </div>

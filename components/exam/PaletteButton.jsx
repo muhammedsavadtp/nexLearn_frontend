@@ -10,7 +10,7 @@ const PaletteButton = ({ number, status, isActive, onClick }) => {
       case "marked":
         return "bg-[#800080] text-white border-[#800080]";
       case "answered-and-marked":
-        return "bg-[#800080] text-white border-[#800080] border-b-4 border-b-[#4CAF50]";
+        return "bg-[#800080] text-white border-[#800080] relative overflow-hidden";
       default:
         return "bg-white text-gray-700 border-gray-300 hover:bg-gray-50";
     }
@@ -25,7 +25,13 @@ const PaletteButton = ({ number, status, isActive, onClick }) => {
         ${isActive ? "ring-2 ring-blue-500 ring-offset-1" : ""}
       `}
     >
-      {number}
+      {status === "answered-and-marked" && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-4/5 h-4/5 bg-[#4CAF50] rounded-[2px]"></div>
+        </div>
+      )}
+
+      <span className="relative z-10">{number}</span>
     </button>
   );
 };
